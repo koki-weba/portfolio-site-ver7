@@ -621,19 +621,36 @@ input, textarea, select { font-family: inherit; }
 
 .problems-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: clamp(20px, 3vw, 36px);
   margin-bottom: clamp(64px, 7vw, 96px);
 }
 
 .problem-card {
+  --pc-icon: 120px;
+  --pc-title: 48px;
+  --pc-gap: 16px;
+  --pc-pad-y: 24px;
+  --pc-pad-x: 20px;
+  --pc-height: calc(var(--pc-pad-y) * 2 + var(--pc-icon) + var(--pc-gap) + var(--pc-title) + 2px);
+
   background: var(--c-bg);
   border-radius: var(--r-xl);
-  padding: clamp(28px, 3.5vw, 44px) clamp(20px, 2.5vw, 32px);
+  padding: var(--pc-pad-y) var(--pc-pad-x);
   text-align: center;
   box-shadow: var(--sh-sm);
   border: 1px solid var(--c-border);
   transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+  box-sizing: border-box;
+  display: grid;
+  grid-template-rows: var(--pc-icon) var(--pc-title);
+  row-gap: var(--pc-gap);
+  justify-items: center;
+  align-content: start;
+  height: 234px;
+  height: var(--pc-height);
+  overflow: hidden;
+  list-style: none;
 }
 .problem-card:hover {
   transform: translateY(-6px);
@@ -641,21 +658,30 @@ input, textarea, select { font-family: inherit; }
 }
 
 .problem-icon {
-  width: 80px;
-  height: 80px;
-  background: var(--c-accent-bg);
+  width: var(--pc-icon);
+  height: var(--pc-icon);
   border-radius: var(--r-lg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 20px;
+  overflow: hidden;
+}
+
+.problem-icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .problem-title {
-  font-size: clamp(14px, 1.5vw, 16px);
+  font-size: 15px;
   font-weight: 700;
   color: var(--c-text);
-  line-height: 1.55;
+  line-height: 24px;
+  width: 100%;
+  height: var(--pc-title);
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  display: block;
 }
 
 /* Solution Banner */
@@ -712,17 +738,27 @@ input, textarea, select { font-family: inherit; }
   border-color: var(--c-accent-mid);
 }
 
-.reason-icon-wrap { display: flex; }
+.reason-icon-wrap {
+  display: flex;
+  justify-content: center;
+}
 
 .reason-icon {
-  width: 56px;
-  height: 56px;
-  background: var(--c-accent-bg);
+  width: 84px;
+  height: 84px;
   border-radius: var(--r-md);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+
+.reason-icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
 }
 
 .reason-body { display: flex; flex-direction: column; gap: 10px; }
@@ -1898,7 +1934,24 @@ input, textarea, select { font-family: inherit; }
   }
 
   /* Problems */
-  .problems-grid { grid-template-columns: repeat(2, 1fr); }
+  .problems-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .problem-card {
+    --pc-icon: 96px;
+    --pc-title: 38px;
+    --pc-gap: 12px;
+    --pc-pad-y: 16px;
+    --pc-pad-x: 12px;
+    height: 180px;
+  }
+
+  .problem-title {
+    font-size: 13px;
+    line-height: 19px;
+  }
 
   /* Reasons */
   .reasons-grid { grid-template-columns: 1fr; }
@@ -1942,6 +1995,6 @@ input, textarea, select { font-family: inherit; }
 }
 
 @media (max-width: 480px) {
-  .problems-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .problems-grid { gap: 10px; }
   .recommend-grid { grid-template-columns: 1fr; }
 }

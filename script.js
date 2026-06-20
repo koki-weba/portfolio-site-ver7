@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initHeader();
   initMobileNav();
   initHeroAnimation();
+  initProblemCards();
   initScrollAnimations();
   initFAQ();
   initContactForm();
@@ -84,6 +85,44 @@ function initMobileNav() {
   document.addEventListener("keydown", e => {
     if (e.key === "Escape" && drawer.classList.contains("is-open")) close();
   });
+}
+
+/* ─────────────────────────────────────────────────────────────
+   PROBLEM CARDS — equal row heights
+───────────────────────────────────────────────────────────── */
+function initProblemCards() {
+  const grid = document.querySelector(".problems-grid");
+  if (!grid) return;
+
+  const equalize = () => {
+    const cards = [...grid.querySelectorAll(".problem-card")];
+    if (!cards.length) return;
+
+    cards.forEach((card) => card.style.removeProperty("height"));
+
+    const rows = new Map();
+    cards.forEach((card) => {
+      const top = card.offsetTop;
+      if (!rows.has(top)) rows.set(top, []);
+      rows.get(top).push(card);
+    });
+
+    rows.forEach((rowCards) => {
+      const maxH = Math.max(...rowCards.map((card) => card.getBoundingClientRect().height));
+      rowCards.forEach((card) => {
+        card.style.height = `${Math.ceil(maxH)}px`;
+      });
+    });
+  };
+
+  const schedule = () => requestAnimationFrame(equalize);
+
+  schedule();
+  window.addEventListener("resize", schedule, { passive: true });
+  window.addEventListener("load", schedule);
+  if (document.fonts) document.fonts.ready.then(schedule);
+  setTimeout(schedule, 100);
+  setTimeout(schedule, 400);
 }
 
 /* ─────────────────────────────────────────────────────────────
