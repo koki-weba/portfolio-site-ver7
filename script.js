@@ -298,43 +298,100 @@ function initFAQ() {
 /* ─────────────────────────────────────────────────────────────
    CONTACT FORM
 ───────────────────────────────────────────────────────────── */
+const CONTACT_TO_EMAIL = "sato.web4839@gmail.com";
+
 function initContactForm() {
   const form = document.getElementById("contact-form");
+  const feedback = document.getElementById("form-feedback");
   if (!form) return;
 
-  form.addEventListener("submit", e => {
+  const showFeedback = (message, type) => {
+    if (!feedback) return;
+    feedback.textContent = message;
+    feedback.hidden = false;
+    feedback.classList.remove("is-success", "is-error");
+    feedback.classList.add(type === "success" ? "is-success" : "is-error");
+  };
+
+  const hideFeedback = () => {
+    if (!feedback) return;
+    feedback.hidden = true;
+    feedback.textContent = "";
+    feedback.classList.remove("is-success", "is-error");
+  };
+
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
+    hideFeedback();
+
     if (!form.checkValidity()) {
       form.reportValidity();
       return;
     }
 
     const submitBtn = form.querySelector(".btn-submit");
-    const original  = submitBtn.innerHTML;
+    const original = submitBtn.innerHTML;
 
     submitBtn.disabled = true;
-    submitBtn.innerHTML = `
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-           stroke="currentColor" stroke-width="2">
-        <polyline points="20 6 9 17 4 12"/>
-      </svg>
-      送信しました！ありがとうございます
-    `;
-    submitBtn.style.background = "#10B981";
+    submitBtn.innerHTML = "送信中...";
 
-    if (gsapReady) {
-      gsap.from(submitBtn, { scale: .95, duration: .3, ease: "back.out(2)" });
-    }
+    const formData = new FormData(form);
+    const payload = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      business_type: formData.get("business_type") || "未選択",
+      message: formData.get("message") || "（未入力）",
+      _replyto: formData.get("email"),
+      _subject: "【HARUTO.】お問い合わせ",
+      _template: "table",
+      _captcha: "false",
+    };
 
-    setTimeout(() => {
+    try {
+      const res = await fetch(`https://formsubmit.co/ajax/${CONTACT_TO_EMAIL}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok || (data.success !== "true" && data.success !== true)) {
+        throw new Error(data.message || "送信に失敗しました");
+      }
+
+      submitBtn.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        送信しました！ありがとうございます
+      `;
+      submitBtn.style.background = "#10B981";
+      showFeedback("お問い合わせを送信しました。24時間以内にご返信いたします。", "success");
+
+      if (gsapReady) {
+        gsap.from(submitBtn, { scale: .95, duration: .3, ease: "back.out(2)" });
+      }
+
+      form.reset();
+
+      setTimeout(() => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = original;
+        submitBtn.style.background = "";
+        hideFeedback();
+      }, 5000);
+    } catch {
       submitBtn.disabled = false;
       submitBtn.innerHTML = original;
-      submitBtn.style.background = "";
-      form.reset();
-    }, 4000);
+      showFeedback("送信に失敗しました。時間をおいて再度お試しください。", "error");
+    }
   });
 
-  // Real-time validation feedback
   form.querySelectorAll(".form-input").forEach(input => {
     input.addEventListener("blur", () => {
       if (input.required && !input.value.trim()) {
@@ -345,6 +402,7 @@ function initContactForm() {
     });
     input.addEventListener("focus", () => {
       input.style.borderColor = "";
+      hideFeedback();
     });
   });
 }
