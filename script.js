@@ -236,15 +236,6 @@ function initScrollAnimations() {
     scrollTrigger: { trigger: ".contact-inner", start: "top 85%", once: true }
   });
 
-  // Final CTA
-  gsap.from(".finalcta-visual", {
-    x: -40, opacity: 0, duration: .8, ease: "power2.out",
-    scrollTrigger: { trigger: ".finalcta-inner", start: "top 85%", once: true }
-  });
-  gsap.from(".finalcta-content > *", {
-    y: 28, opacity: 0, duration: .65, stagger: .12, ease: "power3.out",
-    scrollTrigger: { trigger: ".finalcta-inner", start: "top 85%", once: true }
-  });
 }
 
 /* ─────────────────────────────────────────────────────────────
