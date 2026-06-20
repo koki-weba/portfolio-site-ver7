@@ -345,6 +345,8 @@ function initContactForm() {
       _subject: "【HARUTO.】お問い合わせ",
       _template: "table",
       _captcha: "false",
+      // FormSubmit AJAX requires the page URL when Referer is stripped (GitHub Pages, etc.)
+      _url: window.location.href,
     };
 
     try {
@@ -385,10 +387,14 @@ function initContactForm() {
         submitBtn.style.background = "";
         hideFeedback();
       }, 5000);
-    } catch {
+    } catch (err) {
       submitBtn.disabled = false;
       submitBtn.innerHTML = original;
-      showFeedback("送信に失敗しました。時間をおいて再度お試しください。", "error");
+      const detail = err instanceof Error ? err.message : "";
+      const message = detail && detail !== "送信に失敗しました"
+        ? detail
+        : "送信に失敗しました。時間をおいて再度お試しください。";
+      showFeedback(message, "error");
     }
   });
 
