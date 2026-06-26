@@ -781,5 +781,91 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="script.js"></script>
+
+  <!-- ========== Flowise AI チャットボット ==========
+       Flowise Cloud に接続済み（chatflowid / apiHost 設定済み）。
+       チャットフローを変更した場合は下記の chatflowid を差し替えてください。
+       デザイン（色・文言）は HARUTO. のブランドに合わせて設定しています。
+  -->
+  <script type="module">
+    import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js";
+
+    Chatbot.init({
+      chatflowid: "3280dd23-ddf7-414e-a18e-b40eaf085587",
+      apiHost: "https://cloud.flowiseai.com",
+      theme: {
+        button: {
+          backgroundColor: "#2563EB",
+          right: 24,
+          bottom: 24,
+          size: 56,
+          dragAndDrop: false,
+          iconColor: "#ffffff",
+          customIconSrc: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/chat.svg",
+          autoWindowOpen: {
+            autoOpen: false,
+            openDelay: 2,
+            autoOpenOnMobile: false,
+          },
+        },
+        tooltip: {
+          showTooltip: true,
+          tooltipMessage: "ご相談はこちら 💬",
+          tooltipBackgroundColor: "#0F172A",
+          tooltipTextColor: "#ffffff",
+          tooltipFontSize: 14,
+        },
+        chatWindow: {
+          showTitle: true,
+          title: "HARUTO. サポート",
+          titleAvatarSrc: "",
+          showAgentMessages: true,
+          welcomeMessage: "こんにちは！HARUTO. のAIアシスタントです。ホームページ制作・料金・納期など、お気軽にご質問ください。",
+          errorMessage: "申し訳ありません。エラーが発生しました。時間をおいて再度お試しください。",
+          backgroundColor: "#ffffff",
+          height: 600,
+          width: 400,
+          fontSize: 15,
+          starterPrompts: [
+            "料金プランを知りたい",
+            "制作の流れを教えて",
+            "どれくらいの期間で完成しますか？",
+          ],
+          starterPromptFontSize: 14,
+          clearChatOnReload: false,
+          botMessage: {
+            backgroundColor: "#F1F5F9",
+            textColor: "#0F172A",
+            showAvatar: true,
+            avatarSrc: "https://raw.githubusercontent.com/zahidkhawaja/langchain-chat-nextjs/main/public/parroticon.png",
+          },
+          userMessage: {
+            backgroundColor: "#2563EB",
+            textColor: "#ffffff",
+            showAvatar: false,
+          },
+          textInput: {
+            placeholder: "メッセージを入力...",
+            backgroundColor: "#ffffff",
+            textColor: "#0F172A",
+            sendButtonColor: "#2563EB",
+            maxChars: 500,
+            maxCharsWarningMessage: "500文字以内で入力してください。",
+            autoFocus: true,
+            sendMessageSound: true,
+          },
+          feedback: {
+            color: "#64748B",
+          },
+          footer: {
+            textColor: "#94A3B8",
+            text: "Powered by",
+            company: "HARUTO.",
+            companyLink: "#",
+          },
+        },
+      },
+    });
+  </script>
 </body>
 </html>
